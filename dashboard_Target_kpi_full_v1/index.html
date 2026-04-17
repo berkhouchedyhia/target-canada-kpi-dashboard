@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Key Target — Target Canada</title>
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+<div class="dashboard-shell">
+<div class="brand-bar"><div class="brand-left"><img src="./assets/logo.png" alt="Logo Key Target"><div><div class="brand-title">Key Target — Dashboard interactif</div><div class="brand-sub">Suivi des 16 KPI · Effets interactifs · Démonstration de prévention des risques</div></div></div><div class="brand-right">Prototype HTML enrichi pour présentation</div></div>
+<h2 class="sr-only">Dashboard métrologique interactif Target Canada — 16 KPIs avec injection de données et visualisation de la prévention des erreurs</h2>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Target Canada — Tableau de bord métrologique</h1>
+    <p>16 KPIs · 4 axes · données injectables · démonstration préventive</p>
+  </div>
+  <div class="score-pills">
+    <span class="pill pill-crit clickable" id="cnt-crit" onclick="filterStatus('crit', this)" title="Afficher les KPI critiques">9 critiques</span>
+    <span class="pill pill-warn clickable" id="cnt-warn" onclick="filterStatus('warn', this)" title="Afficher les KPI en vigilance">4 vigilance</span>
+    <span class="pill pill-ok clickable" id="cnt-ok" onclick="filterStatus('ok', this)" title="Afficher les KPI OK">3 OK</span>
+  </div>
+</div>
+
+<div class="axis-tabs">
+  <button class="ax ax0 on" onclick="filterAxis(0)">Tous les axes</button>
+  <button class="ax ax1" onclick="filterAxis(1)">Scalabilité SI</button>
+  <button class="ax ax2" onclick="filterAxis(2)">Satisfaction client</button>
+  <button class="ax ax3" onclick="filterAxis(3)">Adéquation locale</button>
+  <button class="ax ax4" onclick="filterAxis(4)">Réactivité décision</button>
+</div>
+
+<div class="kpi-grid" id="kpi-grid"></div>
+
+<div class="detail-zone" id="detail-zone">
+  <div class="dz-header">
+    <div>
+      <div class="dz-title" id="dz-title">Sélectionner un KPI</div>
+      <div class="dz-sub" id="dz-sub">Cliquez sur une carte pour voir le détail, modifier les données et analyser la prévention</div>
+    </div>
+    <div id="dz-axis-badge" class="pill" style="font-size:10px;"></div>
+  </div>
+  <div class="dz-vals" id="dz-vals"></div>
+  <div class="inject-zone" id="inject-zone" style="display:none">
+    <div class="iz-title">Injecter / modifier les valeurs</div>
+    <div class="iz-grid" id="iz-grid"></div>
+    <div class="iz-btns">
+      <button class="btn-apply" onclick="applyInjection()">Appliquer les changements</button>
+      <button class="btn-reset" onclick="resetKPI()">Réinitialiser</button>
+    </div>
+  </div>
+  <div id="dz-alert"></div>
+  <div class="chart-row" id="dz-charts">
+    <div class="chart-box">
+      <div class="cb-title" id="chart1-title">Évolution mensuelle</div>
+      <div style="position:relative;width:100%;height:160px"><canvas id="detailChart1" role="img" aria-label="Evolution mensuelle du KPI sélectionné">Graphique de tendance mensuelle</canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="cb-title" id="chart2-title">Valeur vs objectif</div>
+      <div style="position:relative;width:100%;height:160px"><canvas id="detailChart2" role="img" aria-label="Comparaison valeur réelle vs objectif cible">Graphique de comparaison</canvas></div>
+    </div>
+  </div>
+  <div id="dz-prevent" style="margin-top:0"></div>
+</div>
+
+<div style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+  <span style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Vue globale — tous les KPIs</span>
+  <div class="seg-ctrl">
+    <button class="seg on" onclick="setGlobalView('radar', this)">Radar</button>
+    <button class="seg" onclick="setGlobalView('bar', this)">Barres</button>
+    <button class="seg" onclick="setGlobalView('timeline', this)">Chronologie préventive</button>
+  </div>
+</div>
+
+<div class="chart-box" style="margin-bottom:1rem">
+  <div id="global-radar-view">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div class="cb-title">Radar performance — 4 axes</div>
+        <div style="position:relative;width:100%;height:200px"><canvas id="globalRadar" role="img" aria-label="Radar des 4 axes métrologique vs objectifs">Radar des 4 axes vs objectifs.</canvas></div>
+      </div>
+      <div>
+        <div class="cb-title">Score global par axe</div>
+        <div id="axis-scores" style="padding-top:8px"></div>
+      </div>
+    </div>
+  </div>
+  <div id="global-bar-view" class="hidden">
+    <div class="cb-title">Performance vs objectif — 16 KPIs normalisés (0–100)</div>
+    <div style="position:relative;width:100%;height:280px"><canvas id="globalBar" role="img" aria-label="Barres horizontales des 16 KPIs vs objectifs normalisés">Barres de performance des 16 KPIs.</canvas></div>
+  </div>
+  <div id="global-timeline-view" class="hidden">
+    <div class="cb-title">Chronologie préventive — détection avec vs sans métrologie</div>
+    <div id="timeline-html"></div>
+  </div>
+</div>
+
+<div class="prevent-cards" id="prevent-cards">
+  <div class="pc" style="border-top-color:#E24B4A">
+    <div class="pc-kpi" style="color:#A32D2D">KPI 03 & 04 — Scalabilité SI</div>
+    <div class="pc-err">Erreur : ERP américain non reconfiguré</div>
+    <div class="pc-body">Complétude à 33,7% (cible 98%) et erreurs config à 8,7% (cible &lt;2%) auraient déclenché un blocage go/no-go dès J+1, avant même l'ouverture du premier magasin.</div>
+    <div class="pc-signal" style="background:#FCEBEB;color:#791F1F">Signal J+1 : blocage automatique. Coût évité estimé : 1,8 Md$ CAD</div>
+  </div>
+  <div class="pc" style="border-top-color:#EF9F27">
+    <div class="pc-kpi" style="color:#854F0B">KPI 05 & 08 — Satisfaction client</div>
+    <div class="pc-err">Erreur : ruptures de stock ignorées des semaines</div>
+    <div class="pc-body">NPS à 6,8 (cible 30) corrélé aux ruptures (3,9%) détecte mécaniquement la dégradation de la chaîne logistique avant que le mécontentement ne devienne viral.</div>
+    <div class="pc-signal" style="background:#FAEEDA;color:#633806">Signal M+2 : alerte client + réapprovisionnement d'urgence</div>
+  </div>
+  <div class="pc" style="border-top-color:#E24B4A">
+    <div class="pc-kpi" style="color:#A32D2D">KPI 09 & 10 — Adéquation locale</div>
+    <div class="pc-err">Erreur : modèle américain plaqué sans adaptation</div>
+    <div class="pc-body">Conformité réglementaire à 93,7% (cible 100%) constitue une violation légale mesurable. Combinée à l'adoption ERP à 84,8%, le critère go/no-go bloque l'ouverture juridiquement.</div>
+    <div class="pc-signal" style="background:#FCEBEB;color:#791F1F">Signal M+1 : blocage légal. Exposition estimée : 200 M$ CAD</div>
+  </div>
+  <div class="pc" style="border-top-color:#EF9F27">
+    <div class="pc-kpi" style="color:#854F0B">KPI 16 — Réactivité décisionnelle</div>
+    <div class="pc-err">Erreur : centralisation totale vers Minneapolis</div>
+    <div class="pc-body">27% des décisions remontant au siège (vs cible 15% max) mesure objectivement la dépendance organisationnelle. Corrélé au MTTR P3 (34,6h), la cause racine est immédiatement identifiable.</div>
+    <div class="pc-signal" style="background:#FAEEDA;color:#633806">Signal M+3 : audit gouvernance + délégation régionale</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="js/script.js"></script> class="note">Logo Key Target intégré · fond personnalisé · cartes et blocs avec effet zoom au survol et au clic.</footer>
+</div>
+</body>
+</html>
