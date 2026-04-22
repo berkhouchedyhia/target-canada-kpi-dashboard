@@ -1,8 +1,14 @@
-![Uploading image.png…]()
 
 # target-canada-kpi-dashboard
 Dashboard interactif développé pour analyser la performance du système d’information de Target Canada à travers 16 KPI.  Il permet de simuler des dérives, visualiser les impacts sur les opérations et la satisfaction client, et soutenir la prise de décision grâce à des indicateurs dynamiques et des fonctionnalités interactives.
 # 📊 Target Canada KPI Dashboard
+
+<img width="1908" height="864" alt="Capture d&#39;écran 2026-04-22 140513" src="https://github.com/user-attachments/assets/8f217677-84c8-4ab0-913a-c949db6ff35c" />
+
+<img width="935" height="419" alt="Capture d&#39;écran 2026-04-22 140548" src="https://github.com/user-attachments/assets/a78dd4ef-dfe1-4588-bf76-ba93136d4b27" />
+<img width="935" height="419" alt="Capture d&#39;écran 2026-04-22 141039" src="https://github.com/user-attachments/assets/4b8f9c61-bc19-4d2c-a013-a155c958f8cf" />
+<img width="1869" height="838" alt="Capture d&#39;écran 2026-04-22 141038" src="https://github.com/user-attachments/assets/2e7e8239-23e7-4cba-afa8-a636ebc210ec" />
+
 
 ## Overview
 This project presents an **interactive dashboard** developed as part of a case study on **Target Canada**.
